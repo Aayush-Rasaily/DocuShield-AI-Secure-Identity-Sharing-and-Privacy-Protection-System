@@ -19,7 +19,7 @@ DocuShield AI automatically detects sensitive fields in identity documents (Aadh
 ## Project Structure
 
 ```
-docushield-ai/
+DocushieldAI/
 ├── data/
 │   ├── raw/            # Original document samples (never commit real docs)
 │   ├── processed/      # Preprocessed images/text
@@ -59,12 +59,18 @@ docushield-ai/
 ## Getting Started
 
 ```bash
-git clone https://github.com/Manzil777/docushield-ai.git
-cd docushield-ai
+git clone https://github.com/Manzil777/DocushieldAI.git
+cd DocushieldAI
 python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+---
+
+## How to Contribute
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full team workflow, branch strategy, commit conventions, and PR rules.
 
 ---
 
