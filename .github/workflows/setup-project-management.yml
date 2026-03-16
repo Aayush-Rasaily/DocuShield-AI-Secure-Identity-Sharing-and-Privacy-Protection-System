@@ -1,0 +1,60 @@
+name: Setup Project Management Artifacts
+
+# ──────────────────────────────────────────────────────────────────────────────
+# This workflow creates (idempotently) all GitHub project management artifacts
+# required for the DocushieldAI 4-week roadmap:
+#
+#   • 4 Milestones  (Week 1–4)
+#   • 9 Labels      (ai, backend, mobile, infra, test, week-1..week-4)
+#   • 35 Issues     (one per roadmap task, with assignees, labels, milestones)
+#
+# How to run:
+#   1. Go to Actions → "Setup Project Management Artifacts"
+#   2. Click "Run workflow"
+#   3. (Optional) check "Dry run" to preview without creating anything
+#
+# The script is idempotent: re-running it skips already-existing items.
+# ──────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run — print commands without creating anything"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+# Issues, milestones and labels all live under the issues permission scope.
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  setup:
+    name: Create milestones, labels and issues
+    runs-on: ubuntu-latest
+
+    env:
+      # gh CLI reads this automatically when set in the environment
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
+      DRY_RUN: ${{ github.event.inputs.dry_run }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Verify gh CLI is available
+        run: gh --version
+
+      - name: Run project setup script
+        run: python3 .github/scripts/setup_project.py
