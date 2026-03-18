@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DocuShield AI — 4-Week Roadmap</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --color-text-primary: #1a1a18;
+    --color-text-secondary: #5f5e5a;
+    --color-text-tertiary: #888780;
+    --color-background-primary: #ffffff;
+    --color-background-secondary: #f5f4ef;
+    --color-border-tertiary: rgba(0,0,0,0.1);
+    --color-border-secondary: rgba(0,0,0,0.2);
+    --color-border-primary: rgba(0,0,0,0.3);
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-text-primary: #e8e6dc;
+      --color-text-secondary: #9c9a92;
+      --color-text-tertiary: #6b6a64;
+      --color-background-primary: #1e1e1c;
+      --color-background-secondary: #252522;
+      --color-border-tertiary: rgba(255,255,255,0.08);
+      --color-border-secondary: rgba(255,255,255,0.15);
+      --color-border-primary: rgba(255,255,255,0.25);
+    }
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-background-primary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    padding: 24px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .header { padding: 0 0 0.5rem; display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+  .header h2 { font-size: 18px; font-weight: 500; }
+  .header span { font-size: 12px; color: var(--color-text-secondary); }
+
+  .tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+  .tab { padding: 5px 14px; border-radius: 20px; font-size: 12px; cursor: pointer; border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); transition: all .15s; font-family: var(--font-sans); }
+  .tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); }
+
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* GANTT */
+  .gantt-wrap { overflow-x: auto; }
+  .gantt { min-width: 640px; }
+  .gantt-header { display: grid; grid-template-columns: 160px repeat(4,1fr); gap: 0; margin-bottom: 8px; }
+  .gantt-header .wk { font-size: 11px; font-weight: 500; text-align: center; padding: 6px 4px; border-radius: 6px; }
+  .gantt-row { display: grid; grid-template-columns: 160px repeat(4,1fr); gap: 0; margin-bottom: 6px; align-items: center; }
+  .gantt-label { font-size: 12px; color: var(--color-text-secondary); padding-right: 12px; line-height: 1.3; }
+  .gantt-label b { display: block; font-weight: 500; color: var(--color-text-primary); font-size: 13px; margin-bottom: 2px; }
+  .bar-cell { padding: 0 3px; height: 32px; display: flex; align-items: center; }
+  .bar { height: 24px; border-radius: 6px; display: flex; align-items: center; padding: 0 8px; font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden; cursor: pointer; transition: opacity .15s; width: 100%; text-decoration: none; }
+  .bar:hover { opacity: .85; }
+  .bar.w1 { background: #EEEDFE; color: #3C3489; border: 0.5px solid #AFA9EC; }
+  .bar.w2 { background: #E1F5EE; color: #085041; border: 0.5px solid #5DCAA5; }
+  .bar.w3 { background: #E6F1FB; color: #0C447C; border: 0.5px solid #85B7EB; }
+  .bar.w4 { background: #FAECE7; color: #712B13; border: 0.5px solid #F0997B; }
+  .gantt-section { font-size: 11px; font-weight: 500; color: var(--color-text-tertiary); letter-spacing: .04em; text-transform: uppercase; padding: 12px 0 6px; grid-column: 1/-1; }
+  .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+  .leg { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--color-text-secondary); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 3px; }
+
+  /* TASK LIST */
+  .week-block { margin-bottom: 20px; }
+  .week-title { font-size: 13px; font-weight: 500; padding: 8px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  .wt1 { background: #EEEDFE; color: #3C3489; }
+  .wt2 { background: #E1F5EE; color: #085041; }
+  .wt3 { background: #E6F1FB; color: #0C447C; }
+  .wt4 { background: #FAECE7; color: #712B13; }
+  .task-list { display: flex; flex-direction: column; gap: 4px; }
+  .task { display: flex; gap: 10px; align-items: flex-start; padding: 8px 10px; border-radius: 8px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); cursor: pointer; transition: border-color .15s; user-select: none; }
+  .task:hover { border-color: var(--color-border-secondary); }
+  .task-check { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid var(--color-border-secondary); flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center; }
+  .task-check svg { display: none; }
+  .task.done .task-check { background: #E1F5EE; border-color: #5DCAA5; }
+  .task.done .task-check svg { display: block; }
+  .task-body { flex: 1; }
+  .task-title { font-size: 13px; line-height: 1.4; }
+  .task-meta { display: flex; gap: 8px; margin-top: 3px; flex-wrap: wrap; }
+  .tag { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+  .tag-ai { background: #EEEDFE; color: #534AB7; }
+  .tag-be { background: #E1F5EE; color: #0F6E56; }
+  .tag-fe { background: #E6F1FB; color: #185FA5; }
+  .tag-infra { background: #FAECE7; color: #993C1D; }
+  .tag-test { background: #EAF3DE; color: #3B6D11; }
+  .task-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; line-height: 1.4; }
+
+  /* MILESTONES */
+  .ms-list { display: flex; flex-direction: column; gap: 8px; }
+  .ms-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 10px; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+  .ms-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 500; flex-shrink: 0; }
+  .ms-dot.m1 { background: #EEEDFE; color: #3C3489; }
+  .ms-dot.m2 { background: #E1F5EE; color: #085041; }
+  .ms-dot.m3 { background: #E6F1FB; color: #0C447C; }
+  .ms-dot.m4 { background: #FAECE7; color: #712B13; }
+  .ms-title { font-size: 14px; font-weight: 500; }
+  .ms-desc { font-size: 12px; color: var(--color-text-secondary); margin-top: 3px; line-height: 1.5; }
+  .ms-date { font-size: 11px; color: var(--color-text-tertiary); margin-top: 4px; }
+  .critical-path { margin-top: 16px; padding: 12px 14px; border-radius: 10px; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); }
+  .critical-path .cp-title { font-size: 12px; font-weight: 500; margin-bottom: 6px; }
+  .critical-path p { font-size: 12px; color: var(--color-text-secondary); line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h2>DocuShield AI — 4-week roadmap</h2>
+  <span>16 Mar → 13 Apr 2026</span>
+</div>
+<div class="tabs">
+  <button class="tab active" onclick="showTab('gantt')">Gantt</button>
+  <button class="tab" onclick="showTab('tasks')">Tasks</button>
+  <button class="tab" onclick="showTab('milestones')">Milestones</button>
+</div>
+
+<!-- GANTT VIEW -->
+<div class="view active" id="tab-gantt">
+  <div class="legend">
+    <span class="leg"><span class="leg-dot" style="background:#EEEDFE;border:0.5px solid #AFA9EC"></span>Week 1 — AI Pipeline</span>
+    <span class="leg"><span class="leg-dot" style="background:#E1F5EE;border:0.5px solid #5DCAA5"></span>Week 2 — Backend</span>
+    <span class="leg"><span class="leg-dot" style="background:#E6F1FB;border:0.5px solid #85B7EB"></span>Week 3 — Mobile</span>
+    <span class="leg"><span class="leg-dot" style="background:#FAECE7;border:0.5px solid #F0997B"></span>Week 4 — Integration</span>
+  </div>
+  <div class="gantt-wrap"><div class="gantt">
+    <div class="gantt-header">
+      <div></div>
+      <div class="wk" style="background:#EEEDFE;color:#3C3489">Wk 1 · Mar 16</div>
+      <div class="wk" style="background:#E1F5EE;color:#085041">Wk 2 · Mar 23</div>
+      <div class="wk" style="background:#E6F1FB;color:#0C447C">Wk 3 · Mar 30</div>
+      <div class="wk" style="background:#FAECE7;color:#712B13">Wk 4 · Apr 7</div>
+    </div>
+
+    <div class="gantt-row"><div class="gantt-section">AI / ML Track</div></div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Dataset prep</b>Roboflow Aadhaar</div>
+      <div class="bar-cell"><div class="bar w1">Download + annotate</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>YOLOv8 training</b>5-class fine-tune</div>
+      <div class="bar-cell"><div class="bar w1">Baseline run</div></div>
+      <div class="bar-cell"><div class="bar w1">Tune + validate</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>ONNX export</b>model.export()</div>
+      <div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w1">Export + test</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>OCR + preprocess</b>Tesseract pipeline</div>
+      <div class="bar-cell"><div class="bar w1">Grayscale → Canny</div></div>
+      <div class="bar-cell"><div class="bar w1">Tesseract integrate</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Forgery detection</b>ELA + CNN</div>
+      <div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w1">ELA implementation</div></div>
+      <div class="bar-cell"><div class="bar w1">CNN + QR validate</div></div>
+      <div class="bar-cell"></div>
+    </div>
+
+    <div class="gantt-row"><div class="gantt-section">Backend Track</div></div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>FastAPI scaffold</b>project setup</div>
+      <div class="bar-cell"><div class="bar w2">Init + DB models</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Auth endpoints</b>JWT + refresh</div>
+      <div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w2">Register/Login/Refresh</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Upload + AI endpoint</b>file handling</div>
+      <div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w2">POST /documents/upload</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Vault + encryption</b>AES-256 + MinIO</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w2">Vault CRUD</div></div>
+      <div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Share engine</b>Redis TTL tokens</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w2">Token gen + expiry</div></div>
+      <div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Masked PDF gen</b>ReportLab + watermark</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w2">PDF + QR output</div></div>
+      <div class="bar-cell"></div>
+    </div>
+
+    <div class="gantt-row"><div class="gantt-section">Mobile Track (Expo + React Native)</div></div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Expo Router setup</b>project init</div>
+      <div class="bar-cell"><div class="bar w3">Init + route groups</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Auth screens</b>Login + Register</div>
+      <div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w3">JWT + Biometrics</div></div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Camera + upload</b>ImagePicker</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w3">Capture + upload</div></div>
+      <div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Masking UI</b>per-field toggles</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w3">Field toggles + preview</div></div>
+      <div class="bar-cell"></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Share screen</b>link + QR + PDF</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w3">Share output screens</div></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Vault UI</b>document list</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w3">List + detail + log</div></div>
+    </div>
+
+    <div class="gantt-row"><div class="gantt-section">Integration + QA</div></div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>E2E integration</b>all services wired</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w4">Wire + smoke test</div></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>AI eval report</b>mAP + accuracy</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w4">Benchmark + docs</div></div>
+    </div>
+    <div class="gantt-row">
+      <div class="gantt-label"><b>Demo prep</b>Phase 1 submission</div>
+      <div class="bar-cell"></div><div class="bar-cell"></div><div class="bar-cell"></div>
+      <div class="bar-cell"><div class="bar w4">Slides + video demo</div></div>
+    </div>
+  </div></div>
+</div>
+
+<!-- TASK VIEW -->
+<div class="view" id="tab-tasks">
+
+  <div class="week-block">
+    <div class="week-title wt1">Week 1 · Mar 16–22 — AI Pipeline Foundation <span style="font-size:11px;opacity:.7">10 tasks</span></div>
+    <div class="task-list" id="w1-tasks">
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Download Aadhaar dataset from Roboflow</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Universe: akash-k-p-gs9iu/aadhaar-card-details-extraction — 2,900+ images, 5 classes. Split 80/20 train/val.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Create dataset YAML and verify class labels</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Classes: AadhaarNumber(0), DOB(1), Gender(2), Name(3), Address(4). Validate annotation format.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Run baseline YOLOv8-small training (100 epochs)</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">model.train(data="aadhaar.yaml", epochs=100, imgsz=640, batch=16, optimizer="Adam", lr0=0.001)</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Add data augmentation: glare, blur, skew, crop</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Handles laminated card reflections. Target: improve Address class from baseline ~83% mAP-50.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Implement preprocessing pipeline in OpenCV</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Steps: grayscale → Gaussian blur (5×5) → Canny edge → perspective transform → normalize [0,1]</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Integrate Tesseract OCR (lang: hin+eng)</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">PSM 6 for Aadhaar number regions, PSM 11 for address. Crop bounding box output → feed to Tesseract.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Build regex post-processor for each field class</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Aadhaar: r"\d{4}\s\d{4}\s\d{4}", DOB: r"\d{2}/\d{2}/\d{4}", Address: RapidFuzz fuzzy match + PIN regex</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Set up FastAPI project scaffold + Docker Compose</div><div class="task-meta"><span class="tag tag-be">Backend</span><span class="tag tag-infra">Infra</span></div><div class="task-sub">Services: fastapi, postgres:15, redis:7, minio. Alembic migrations. Health check endpoints.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Set up Expo Router project with route groups</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">Groups: (auth)/ for login/register, (vault)/ for protected screens. Redirect unauthenticated to /sign-in.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Write unit tests for preprocessing + OCR pipeline</div><div class="task-meta"><span class="tag tag-test">Test</span></div><div class="task-sub">20 test images covering: laminated, blurry, Hindi+English, e-Aadhaar screenshot. Target: ≥ 90% field extraction.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title wt2">Week 2 · Mar 23–29 — Backend Core + Model Tuning <span style="font-size:11px;opacity:.7">9 tasks</span></div>
+    <div class="task-list">
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Export best.pt to ONNX and validate inference</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">model.export(format="onnx", dynamic=False, imgsz=640). Run onnxruntime on 10 images, verify bboxes match .pt output.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Build ELA forgery detection module</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Save at quality=90, compute pixel diff. ELA score &gt; 15 → Suspicious. Pair with CNN binary classifier.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Build QR code payload validator</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Decode QR with pyzbar → extract Aadhaar number → compare with OCR output. Mismatch = Likely Forged.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Implement JWT auth: register, login, refresh</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">Access token 15min (HS256), refresh token 7d. bcrypt password hash. POST /auth/register, /auth/login, /auth/refresh.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">POST /documents/upload — file + AI pipeline</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">Accept UploadFile. Run forgery check → YOLOv8 → OCR → return field detections. BackgroundTasks for heavy ops. 8s budget.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">POST /documents/{id}/mask — apply masking config</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">Accept masking JSON per field. Return masked image URL (pre-signed MinIO, 1hr TTL).</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">SQLAlchemy models: User, Document, VaultItem, ShareToken</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">Alembic migration. Document stores encrypted_path, masking_presets (JSONB), forgery_status. ShareToken stores bcrypt_hash + expires_at.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Auth screens: Login + Register in Expo Router</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">useSession hook with JWT in expo-secure-store. Protected (vault) layout redirects to /sign-in if !session. Biometric via expo-local-authentication.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">API integration tests: auth + upload + mask</div><div class="task-meta"><span class="tag tag-test">Test</span></div><div class="task-sub">pytest + httpx async client. Test happy path and error cases: bad image, expired token, duplicate upload.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title wt3">Week 3 · Mar 30–Apr 6 — Mobile UI + Sharing Engine <span style="font-size:11px;opacity:.7">9 tasks</span></div>
+    <div class="task-list">
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Camera capture screen with image quality check</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">expo-image-picker: launchCameraAsync. Client-side blur score (Laplacian variance &lt; 100 → re-capture prompt).</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">AI processing loader screen</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">Steps: "Checking authenticity…" → "Detecting fields…" → "Ready to customize". Forgery badge shown on result.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Masking toggle UI with live document preview</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">Per-field toggles (Show/Partial/Mask). Preview re-renders on each toggle. "Save preset" button.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Vault CRUD: encrypt + store in MinIO</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">AES-256-GCM. Key = PBKDF2(password, salt, 100000 iters). Server never holds plaintext key.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Share token engine: Redis TTL + link + QR</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">Token key: share:{uuid4}. TTL: 3600/21600/86400/604800s. one-time flag sets max_access=1. QR = qrcode.make(link).</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Masked PDF generator with watermark</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">ReportLab: embed masked image. Diagonal watermark: "COPY — NOT FOR REUSE". Footer: "Shared via DocuShield AI | {timestamp}".</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Share screen: link + QR fullscreen + PDF button</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">3 tabs: Link (copy + expiry timer), QR (fullscreen), PDF (single download). Access count + Revoke button.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Vault list screen + document detail + share log</div><div class="task-meta"><span class="tag tag-fe">Mobile</span></div><div class="task-sub">FlatList of saved documents. Detail: masking presets, share history (time, access count, IP). Revoke from here.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">GET /share/{token} — public share endpoint</div><div class="task-meta"><span class="tag tag-be">Backend</span></div><div class="task-sub">No auth. Validate Redis token → increment access_count → 410 Gone if one-time used. Log IP + timestamp.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="week-block">
+    <div class="week-title wt4">Week 4 · Apr 7–13 — Integration, Testing, Demo <span style="font-size:11px;opacity:.7">7 tasks</span></div>
+    <div class="task-list">
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Full E2E smoke test: upload → mask → share → view</div><div class="task-meta"><span class="tag tag-test">Test</span></div><div class="task-sub">Happy path on physical Android device. Verify field detection, masking, link, QR, PDF. Log timing per step.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Performance benchmarks: end-to-end ≤ 8s on 4G</div><div class="task-meta"><span class="tag tag-test">Test</span></div><div class="task-sub">Profile each stage. Pre-warm ONNX at startup. Run ELA + YOLO in parallel (asyncio.gather) if over budget.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">AI evaluation report: mAP-50, TRA per class</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">model.val() on held-out test set. Table: class × {precision, recall, mAP-50, TRA}. Compare with NetraAadhaar baseline.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Security audit: auth, token expiry, encryption</div><div class="task-meta"><span class="tag tag-infra">Infra</span></div><div class="task-sub">Verify: no plaintext Aadhaar in logs, tokens expire in Redis, AES key never leaves server, rate limiting active.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Update .agent/INDEX.md with final state + decisions</div><div class="task-meta"><span class="tag tag-infra">Infra</span></div><div class="task-sub">Document actual mAP achieved, address accuracy workarounds, deferred features, known limitations.</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">BAD685 submission: report + demo video</div><div class="task-meta"><span class="tag tag-infra">Infra</span></div><div class="task-sub">Phase 1 report with 4 papers cited. 3-min screen-recorded demo: problem (30s) → upload/detect (30s) → masking (45s) → share (45s) → vault (30s).</div></div>
+      </div>
+      <div class="task" onclick="toggleTask(this)">
+        <div class="task-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="#085041" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="task-body"><div class="task-title">Phase 2 kickoff: PAN card dataset research</div><div class="task-meta"><span class="tag tag-ai">AI</span></div><div class="task-sub">Identify PAN card dataset sources. Note field differences. Draft v2 YAML. Review Mero Nagarikta pipeline for Nepal scope.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MILESTONES VIEW -->
+<div class="view" id="tab-milestones">
+  <div class="ms-list">
+    <div class="ms-item">
+      <div class="ms-dot m1">M1</div>
+      <div class="ms-body">
+        <div class="ms-title">AI pipeline validated end-to-end</div>
+        <div class="ms-desc">YOLOv8 fine-tuned model achieves ≥ 90% mAP-50 overall. Tesseract OCR extracts all 5 fields from 20 test images. Preprocessing pipeline handles laminated + e-Aadhaar formats. ONNX export tested in onnxruntime.</div>
+        <div class="ms-date">Target: Friday 22 Mar 2026 · End of Week 1</div>
+      </div>
+    </div>
+    <div class="ms-item">
+      <div class="ms-dot m2">M2</div>
+      <div class="ms-body">
+        <div class="ms-title">Backend API fully functional</div>
+        <div class="ms-desc">All endpoints live: auth (register/login/refresh), upload+AI, masking, vault CRUD, share token generation. JWT auth working. FastAPI BackgroundTasks handling inference. PostgreSQL schema migrated. Integration tests passing.</div>
+        <div class="ms-date">Target: Saturday 29 Mar 2026 · End of Week 2</div>
+      </div>
+    </div>
+    <div class="ms-item">
+      <div class="ms-dot m3">M3</div>
+      <div class="ms-body">
+        <div class="ms-title">Complete mobile app: upload → mask → share</div>
+        <div class="ms-desc">Expo Router app with auth flow, camera capture, AI processing screen, masking toggle UI, and all 3 share outputs (link + QR + PDF) working end-to-end on a real Android device. Vault list and document detail screens functional. Share log visible.</div>
+        <div class="ms-date">Target: Sunday 6 Apr 2026 · End of Week 3</div>
+      </div>
+    </div>
+    <div class="ms-item">
+      <div class="ms-dot m4">M4</div>
+      <div class="ms-body">
+        <div class="ms-title">Phase 1 submission-ready prototype</div>
+        <div class="ms-desc">E2E flow works in ≤ 8 seconds on 4G. AI evaluation report with mAP/TRA tables generated. Security audit passed. BAD685 project report written (citing all 4 research papers). 3-minute demo video recorded and uploaded. .agent/INDEX.md updated.</div>
+        <div class="ms-date">Target: Sunday 13 Apr 2026 · End of Week 4</div>
+      </div>
+    </div>
+  </div>
+  <div class="critical-path">
+    <div class="cp-title">Critical path</div>
+    <p>Dataset download → YOLOv8 baseline training → ONNX export → FastAPI upload endpoint → Mobile camera screen → Masking UI → Share engine → E2E test. Everything else is parallel. <strong>Blocker:</strong> the YOLOv8 model quality gates everything — start training Day 1.</p>
+  </div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const ids = ['gantt', 'tasks', 'milestones'];
+    t.classList.toggle('active', ids[i] === id);
+  });
+  document.querySelectorAll('.view').forEach(v => {
+    v.classList.toggle('active', v.id === 'tab-' + id);
+  });
+}
+function toggleTask(el) {
+  el.classList.toggle('done');
+}
+</script>
+</body>
+</html>
