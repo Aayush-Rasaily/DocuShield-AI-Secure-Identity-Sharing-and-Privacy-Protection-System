@@ -162,8 +162,15 @@ Load these before starting any task. Full bodies at:
 | `async-python-patterns` | `~/.gemini/antigravity/skills/async-python-patterns/SKILL.md` | Track B alongside FastAPI |
 | `react-native-architecture` | `~/.gemini/antigravity/skills/react-native-architecture/SKILL.md` | All Track C tasks |
 | `python-testing-patterns` | `~/.gemini/antigravity/skills/python-testing-patterns/SKILL.md` | All Track D tasks |
+| `fastapi-pro` | `~/.gemini/antigravity/skills/fastapi-pro/SKILL.md` | FastAPI backend, JWT auth, middleware |
+| `api-security-best-practices` | `~/.gemini/antigravity/skills/api-security-best-practices/SKILL.md` | Security headers, input validation, rate limiting |
+| `auth-implementation-patterns` | `~/.gemini/antigravity/skills/auth-implementation-patterns/SKILL.md` | OAuth2, JWT, RBAC implementation |
+| `postgres-best-practices` | `~/.gemini/antigravity/skills/postgres-best-practices/SKILL.md` | RLS policies, database security |
+| `nextjs-supabase-auth` | `~/.gemini/antigravity/skills/nextjs-supabase-auth/SKILL.md` | Frontend auth integration |
+| `api-documentation-generator` | ` ~/.gemini/antigravity/skills/api-documentation-generator/SKILL.md` | OpenAPI/Swagger documentation |
 
 **Do NOT load:**
+
 - `ai-ml` skill — LLM-focused, wrong paradigm for Track A (CV/OCR work)
 
 **Track A has no skill coverage.** For tasks A-01 through A-08, follow the
