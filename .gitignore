@@ -59,3 +59,8 @@ logs/
 # Coverage
 .coverage
 htmlcov/
+
+# Dataset images - too large for git
+data/aadhaar/train/
+data/aadhaar/valid/
+data/aadhaar/test/

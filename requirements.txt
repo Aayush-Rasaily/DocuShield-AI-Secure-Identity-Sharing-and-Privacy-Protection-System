@@ -9,6 +9,8 @@ torchvision
 scikit-learn
 numpy
 Pillow
+albumentationsx
+ultralytics
 
 # NLP / PII
 spacy
