@@ -1,0 +1,12 @@
+{
+  "model": "YOLOv8-nano",
+  "source": "arnabdhar/YOLOv8-nano-aadhar-card",
+  "dataset": "jizo/aadhar-card-entity-detection",
+  "epochs_trained": 100,
+  "image_size": 640,
+  "mAP50": 0.963,
+  "precision": 0.973,
+  "recall": 0.962,
+  "weights": "backend/models/best.pt",
+  "note": "Pretrained baseline — skipped local retraining as mAP50 exceeds acceptable threshold"
+}
