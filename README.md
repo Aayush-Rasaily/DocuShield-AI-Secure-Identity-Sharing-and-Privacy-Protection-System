@@ -5,6 +5,13 @@
 DocuShield AI automatically detects sensitive fields in identity documents (Aadhaar, PAN, Passport, DL), masks confidential data, verifies document authenticity, and enables secure sharing — using OCR, ML, and Computer Vision.
 
 ---
+## Dataset
+
+The Aadhaar dataset is not included in this repo due to size.
+Download from Roboflow and place at `data/aadhaar/`:
+- `data/aadhaar/train/`
+- `data/aadhaar/valid/`
+- `data/aadhaar/test/`
 
 ## Features
 
