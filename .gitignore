@@ -64,3 +64,4 @@ htmlcov/
 data/aadhaar/train/
 data/aadhaar/valid/
 data/aadhaar/test/
+aadhaar_dataset.zip
