@@ -4,7 +4,7 @@
 | Role | GitHub |
 |---|---|
 | Dev | [@Manzil777](https://github.com/Manzil777) |
-| Dev | [@Aayush-Rasaily](https://github.com/Aayush-Rasaily) |
+| Backend Developer and ML Trainer | [@Aayush-Rasaily](https://github.com/Aayush-Rasaily) |
 
 ---
 
