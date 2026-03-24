@@ -111,7 +111,7 @@ Class labels:
 
 ```bash
 # Clone
-git clone https://github.com/Manzil777/DocushieldAI.git
+https://github.com/Aayush-Rasaily/DocuShield-AI-Secure-Identity-Sharing-and-Privacy-Protection-System.git
 cd DocushieldAI
 
 # Create virtual environment
@@ -208,4 +208,4 @@ Full task contracts and current status in `.agent/GETSHITDONE.md`.
 
 ## License
 
-MIT — CMRIT Department of AI & Data Science, 2026
+CMRIT Department of AI & Data Science, 2026
