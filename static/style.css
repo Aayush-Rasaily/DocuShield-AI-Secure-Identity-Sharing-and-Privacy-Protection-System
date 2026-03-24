@@ -1,0 +1,109 @@
+/* Dashboard layout */
+
+.dashboard {
+    display: flex;
+    height: 100vh;
+}
+
+
+/* Sidebar */
+
+.sidebar {
+    width: 250px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-bottom: 5px;
+}
+
+.tagline {
+    font-size: 12px;
+    opacity: 0.7;
+    margin-bottom: 20px;
+}
+
+.sidebar ul {
+    list-style: none;
+}
+
+.sidebar ul li {
+    padding: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar ul li:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
+/* Main area */
+
+.main {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    background: url('/static/bg.jpg') no-repeat center center/cover;
+}
+
+
+/* Sections */
+
+.section {
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+}
+
+.section.active {
+    display: block;
+}
+
+
+/* Inputs */
+
+input[type="file"],
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+
+/* Buttons */
+
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background: #00c6ff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0072ff;
+}
+
+
+/* Status */
+
+.success {
+    color: lightgreen;
+    font-size: 18px;
+}
+
+.error {
+    color: red;
+    font-size: 18px;
+}

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DocuShield AI</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="main-container">
+
+    <!-- LEFT -->
+    <div class="left-panel">
+
+        <h1>🔐 DocuShield AI</h1>
+        <p>Protect your identity with AI-powered masking & verification</p>
+
+        <form method="POST" enctype="multipart/form-data">
+
+            <label class="upload-box">
+                📂 Upload ID Document
+                <input type="file" name="file" hidden onchange="preview(event, 'idImg')" required>
+            </label>
+
+            <label class="upload-box">
+                🤳 Upload Selfie
+                <input type="file" name="selfie" hidden onchange="preview(event, 'selfieImg')" required>
+            </label>
+
+            <button>🚀 Analyze</button>
+
+        </form>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-panel">
+
+        <div class="preview-container">
+            <h2>Preview</h2>
+            <img id="idImg">
+            <img id="selfieImg">
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+function preview(event, id){
+    let reader = new FileReader();
+    reader.onload = function(){
+        let img = document.getElementById(id);
+        img.src = reader.result;
+        img.style.display = "block";
+    }
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>
+
+</body>
+</html>
