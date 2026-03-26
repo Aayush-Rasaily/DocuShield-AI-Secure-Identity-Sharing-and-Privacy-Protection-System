@@ -5,6 +5,7 @@
 |---|---|
 | Dev | [@Manzil777](https://github.com/Manzil777) |
 | Backend Developer and ML Trainer | [@Aayush-Rasaily](https://github.com/Aayush-Rasaily) |
+| ML Developer,Model Trainer| [@aryan-kathyanian (https://github.com/aryan-kathyanian) |
 
 ---
 
